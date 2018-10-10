@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SAML sample</title>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/baas.js"></script>
+    <script src="js/config.js"></script>
+</head>
+<body>
+<script>
+var oneTimeToken;
+
+$(function() {
+    // get token from query string
+    var getOneTimeToken = function() {
+        var query = document.location.search.substring(1);
+        var params = query.split('&');
+        for (var i = 0; i < params.length; i++) {
+            var el = params[i].split('=');
+            var name = decodeURIComponent(el[0]);
+            if (name === "token") {
+                return decodeURIComponent(el[1]);
+            }
+        }
+        return null;
+    };
+
+    // initialize nebula
+    Nebula.initialize(NebulaConfig);
+
+    oneTimeToken = getOneTimeToken();
+    if (oneTimeToken == null) {
+        $("#result").text("No one time token.");
+        return;
+    }
+});
+
+function login() {
+    var userInfo = {
+        token: oneTimeToken,
+        username: "",
+        password: ""
+    };
+    Nebula.User.login(userInfo)
+        .then(function(user) {
+            // login ok
+            $("#result").text("Login succeeded: username=" + user.username);
+        })
+        .catch(function(err) {
+            // login failure
+            $("#result").text("Login failed: " + err);
+        });
+};
+
+</script>
+<h1>SAML sample</h1>
+
+<a href="#" onclick="login();">login</a><br/>
+
+Result:<br/>
+<div id="result"></div>
+
+<a href="./index.html">Retry</a>
+
+</body>
+</html>

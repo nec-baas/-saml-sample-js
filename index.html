@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SAML sample</title>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/baas.js"></script>
+    <script src="js/config.js"></script>
+</head>
+<body>
+<script>
+function convertAbsUrl(src) {
+    return $("<a>").attr("href", src).prop("href");
+}
+function startSaml() {
+    var redirectUri = convertAbsUrl("./landing.html");
+    var startUri = NebulaConfig.baseUri + "/1/" + NebulaConfig.tenant + "/auth/saml/init?redirect=" 
+        + encodeURIComponent(redirectUri);
+    document.location.href = startUri;
+};
+
+function startSamlManualLogin() {
+    var redirectUri = convertAbsUrl("./landing_manual_login.html");
+    var startUri = NebulaConfig.baseUri + "/1/" + NebulaConfig.tenant + "/auth/saml/init?redirect="
+        + encodeURIComponent(redirectUri);
+    document.location.href = startUri;
+};
+
+</script>
+<h1>SAML sample</h1>
+
+<a href="#" onclick="startSaml();">Start authentication</a>
+<br/>
+<a href="#" onclick="startSamlManualLogin();">Start authentication(Manual Login)</a>
+
+</body>
+</html>
